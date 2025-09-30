@@ -7,18 +7,38 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements TickerListFragment.OnTickerSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        if (savedInstanceState == null) {
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction trans = fm.beginTransaction();
+
+            // Create instances
+            TickerListFragment listFragment = new TickerListFragment();
+            InfoWebFragment infoFragment = new InfoWebFragment();
+
+            // Add them to the containers
+            trans.add(R.id.TickerListFragment, listFragment, "listFrag");
+            trans.add(R.id.InfoWebFragment, infoFragment, "infoFrag");
+
+            trans.commit();
+        }}
+    @Override
+    public void onTickerSelected(String ticker) {
+        InfoWebFragment infoFragment = (InfoWebFragment)
+                getSupportFragmentManager().findFragmentById(R.id.InfoWebFragment);
+
+        if (infoFragment != null) {
+            infoFragment.updateUrl(ticker);
+        }
     }
 }

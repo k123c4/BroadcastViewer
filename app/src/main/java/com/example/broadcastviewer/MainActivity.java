@@ -22,20 +22,18 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction trans = fm.beginTransaction();
 
-            // Create instances
             TickerListFragment listFragment = new TickerListFragment();
             InfoWebFragment infoFragment = new InfoWebFragment();
-
-            // Add them to the containers
             trans.add(R.id.TickerListFragment, listFragment, "listFrag");
             trans.add(R.id.InfoWebFragment, infoFragment, "infoFrag");
 
             trans.commit();
         }}
+
     @Override
     public void onTickerSelected(String ticker) {
         InfoWebFragment infoFragment = (InfoWebFragment)
-                getSupportFragmentManager().findFragmentById(R.id.InfoWebFragment);
+                getSupportFragmentManager().findFragmentByTag("infoFrag");
 
         if (infoFragment != null) {
             infoFragment.updateUrl(ticker);

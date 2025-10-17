@@ -13,6 +13,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity
         implements TickerListFragment.OnTickerSelectedListener {
+    FragmentManager fg;
+    TickerViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

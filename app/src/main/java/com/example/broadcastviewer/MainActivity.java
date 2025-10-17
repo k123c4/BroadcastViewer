@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction tx = fm.beginTransaction();
-            tx.add(R.id.ticker_list_view, new TickerListFragment(), "listFrag");
+            tx.add(R.id.TickerListFragment, new TickerListFragment(), "listFrag");
             tx.add(R.id.InfoWebFragment, new InfoWebFragment(), "infoFrag");
             tx.commit();
         }

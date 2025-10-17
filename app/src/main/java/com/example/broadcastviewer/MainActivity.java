@@ -11,34 +11,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity
-        implements TickerListFragment.OnTickerSelectedListener {
-    FragmentManager fg;
-    TickerViewModel viewModel;
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         if (savedInstanceState == null) {
             FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction trans = fm.beginTransaction();
-
-            TickerListFragment listFragment = new TickerListFragment();
-            InfoWebFragment infoFragment = new InfoWebFragment();
-            trans.add(R.id.TickerListFragment, listFragment, "listFrag");
-            trans.add(R.id.InfoWebFragment, infoFragment, "infoFrag");
-
-            trans.commit();
-        }}
-
-    @Override
-    public void onTickerSelected(String ticker) {
-        InfoWebFragment infoFragment = (InfoWebFragment)
-                getSupportFragmentManager().findFragmentByTag("infoFrag");
-
-        if (infoFragment != null) {
-            infoFragment.updateUrl(ticker);
+            FragmentTransaction tx = fm.beginTransaction();
+            tx.add(R.id.ticker_list_view, new TickerListFragment(), "listFrag");
+            tx.add(R.id.InfoWebFragment, new InfoWebFragment(), "infoFrag");
+            tx.commit();
         }
     }
 }

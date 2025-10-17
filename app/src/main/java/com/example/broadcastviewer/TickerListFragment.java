@@ -1,61 +1,49 @@
 package com.example.broadcastviewer;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
+import java.util.List;
 
 public class TickerListFragment extends Fragment {
-    public interface OnTickerSelectedListener {
-        void onTickerSelected(String ticker);
-    }
-
-    private ListView tickerListView;
-    private String[] defaultTickers = {"NEE", "AAPL", "DIS"};
-
-    public TickerListFragment() {
-    }
+    private TrackerViewModel vm;
+    private ArrayAdapter<String> adapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.ticker_list_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        // Get shared ViewModel from the activity
+        vm = new ViewModelProvider(requireActivity()).get(TrackerViewModel.class);
 
-        tickerListView = view.findViewById(R.id.ticker_list_view);
+        ListView list = view.findViewById(R.id.ticker_list_view);
+        adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1);
+        list.setAdapter(adapter);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                requireContext(),
-                android.R.layout.simple_list_item_1,
-                defaultTickers
-        );
-
-        tickerListView.setAdapter(adapter);
-
-        tickerListView.setOnItemClickListener((parent, view1, position, id) -> {
-            String selectedTicker = defaultTickers[position];
-
-            Bundle args = new Bundle();
-            args.putString("ticker", selectedTicker);
-
-            InfoWebFragment infoWebFragment = new InfoWebFragment();
-            infoWebFragment.setArguments(args);
-
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.InfoWebFragment, infoWebFragment)
-                    .addToBackStack(null)
-                    .commit();
+        // Observe the ticker list in ViewModel
+        vm.getTickers().observe(getViewLifecycleOwner(), symbols -> {
+            adapter.clear();
+            if (symbols != null) adapter.addAll(symbols);
+            adapter.notifyDataSetChanged();
         });
 
+
+        list.setOnItemClickListener((parent, row, position, id) -> {
+            List<String> symbols = vm.getTickers().getValue();
+            if (symbols != null && position >= 0 && position < symbols.size()) {
+                String selected = symbols.get(position);
+                vm.selectTicker(selected); // tells the ViewModel which ticker was clicked
+            }
+        });
     }
 }

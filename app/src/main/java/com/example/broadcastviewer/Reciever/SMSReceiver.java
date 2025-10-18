@@ -15,7 +15,6 @@ public class SMSReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        // What we want to do when the SMS happens
         final Bundle bundle = intent.getExtras();
         if(intent.getAction().equals(Telephony.Sms.Intents.SMS_RECEIVED_ACTION)){
             if(bundle != null){
@@ -32,20 +31,33 @@ public class SMSReceiver extends BroadcastReceiver {
                 launchIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 String prefix = "Ticker:<<";
                 String suffix = ">>";
-                if(message.startsWith(prefix) && message.endsWith(suffix)){
-                    String ticker = message.substring(prefix.length(), message.length() - suffix.length());
-                    if(ticker.matches("[a-zA-Z]+"))
-                    launchIntent.putExtra("TICKER",ticker.toUpperCase());
-                        else
-                        launchIntent.putExtra("INVALID TICKER", true);
-                }else{
-                    launchIntent.putExtra("INVALID FORMAT", true);
+
+
+                // correct format
+
+                if (message.startsWith(prefix) && message.endsWith(suffix)) {
+                    String ticker = message.substring(prefix.length(), message.length() - suffix.length()).trim().toUpperCase();
+
+                    if (ticker.matches("^[a-zA-Z]{1,5}$")) {
+                        ticker = ticker.toUpperCase();  // capitalize before using
+
+                        // Valid ticker format
+                        Toast.makeText(context, "Received valid ticker: " + ticker, Toast.LENGTH_SHORT).show();
+                        launchIntent.putExtra("TICKER", ticker);
+                    } else {
+                        // Valid SMS format but invalid ticker characters
+                        Toast.makeText(context, "Invalid ticker: " + ticker, Toast.LENGTH_LONG).show();
+                        launchIntent.putExtra("INVALID_TICKER", true);
+                    }
+
+                } else {
+                    // Invalid SMS format
+                    Toast.makeText(context, "No valid watchlist entry found", Toast.LENGTH_LONG).show();
+                    launchIntent.putExtra("INVALID_FORMAT", true);
                 }
+
                 context.startActivity(launchIntent);
             }
         }
     }
-
-
-
 }

@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission/INTERNET"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -17,11 +17,10 @@
         <receiver
             android:name=".Reciever.SMSReceiver"
             android:enabled="true"
-            android:exported="true"
-            android:permission="android.permission.BROADCAST.SMS">
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.provider.telephony.SMS.RECIEVED" />
-                <category android:name="android.intent.catagorey.DEFAULT" />
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
 

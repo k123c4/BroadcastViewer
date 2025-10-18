@@ -1,4 +1,4 @@
-package com.example.broadcastviewer.Reciever;
+package com.example.broadcastviewer.Receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

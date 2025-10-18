@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import androidx.fragment.app.Fragment;
@@ -31,6 +30,7 @@ public class InfoWebFragment extends Fragment {
         webView.loadUrl("https://seekingalpha.com");
         return v;
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         vm = new ViewModelProvider(requireActivity()).get(TrackerViewModel.class);
@@ -41,5 +41,6 @@ public class InfoWebFragment extends Fragment {
                 webView.loadUrl("https://seekingalpha.com/symbol/" + ticker);
             }
         });
+
     }
 }

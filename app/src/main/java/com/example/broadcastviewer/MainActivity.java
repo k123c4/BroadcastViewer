@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.RECEIVE_SMS}, 67);
         }
 
-        // handle initial launch via SMS
+        // initial launch via SMS
         smsIntent(getIntent());
     }
 
